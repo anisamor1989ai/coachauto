@@ -1,4 +1,5 @@
 "use client";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import Link from "next/link";
@@ -22,7 +23,7 @@ export default function Classement() {
   const [results, setResults] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => { fetchRanking(); }, [category, critere]);
+  useEffect(() => { fetchRanking(); }, [category, critere]); // eslint-disable-line react-hooks/exhaustive-deps
 
   async function fetchRanking() {
     setLoading(true);
