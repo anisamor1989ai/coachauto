@@ -1,5 +1,6 @@
 import Link from "next/link";
 import CarImage from "./components/CarImage";
+import { supabase } from "@/lib/supabase";
 
 const cards = [
   { href: "/donner-avis", emoji: "✍️", title: "Donner un avis", desc: "Notez votre voiture sur 7 critères.", color: "from-red-50 to-orange-50", border: "border-red-100" },
@@ -8,16 +9,18 @@ const cards = [
   { href: "/expert", emoji: "🎯", title: "Avis expert", desc: "Mon analyse indépendante modèle par modèle.", color: "from-green-50 to-emerald-50", border: "border-green-100" },
 ];
 
-const featuredCars = [
-  { brand: "Dacia", model: "Duster", category: "SUV" },
-  { brand: "Toyota", model: "Corolla", category: "Berline" },
-  { brand: "Renault", model: "Clio", category: "Citadine" },
-  { brand: "Hyundai", model: "Tucson", category: "SUV" },
-  { brand: "Kia", model: "Sportage", category: "SUV" },
-  { brand: "Volkswagen", model: "Golf", category: "Compacte" },
-];
+async function getFeaturedCars() {
+  const { data } = await supabase
+    .from("cars")
+    .select("brand, model, category, image_url")
+    .in("model", ["Duster", "Corolla", "Clio", "Tucson", "Sportage", "Golf"])
+    .limit(6);
+  return data || [];
+}
 
-export default function Home() {
+export default async function Home() {
+  const featuredCars = await getFeaturedCars();
+
   return (
     <div>
       <div className="relative overflow-hidden bg-gradient-to-br from-red-700 to-red-900 text-white rounded-3xl px-8 py-16 mb-12 text-center shadow-2xl">
@@ -60,7 +63,13 @@ export default function Home() {
           {featuredCars.map(car => (
             <Link key={`${car.brand}-${car.model}`} href="/notes"
               className="bg-white rounded-2xl overflow-hidden border border-gray-100 hover:shadow-lg transition-all hover:-translate-y-1">
-              <CarImage brand={car.brand} model={car.model} category={car.category} className="h-28 w-full" />
+              <CarImage
+                brand={car.brand}
+                model={car.model}
+                category={car.category}
+                imageUrl={car.image_url}
+                className="h-36 w-full"
+              />
               <div className="p-3">
                 <p className="font-bold text-gray-800 text-sm">{car.brand} {car.model}</p>
                 <p className="text-xs text-gray-400">{car.category}</p>

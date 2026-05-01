@@ -102,14 +102,13 @@ interface CarImageProps {
   model: string;
   category?: string;
   className?: string;
+  imageUrl?: string | null;
 }
 
-export default function CarImage({ brand, model, category = "Berline", className = "" }: CarImageProps) {
+export default function CarImage({ brand, model, category = "Berline", className = "", imageUrl: propImageUrl }: CarImageProps) {
   const [imgError, setImgError] = useState(false);
   const key = `${brand} ${model}`;
- const imageUrl = carImages[key] 
-  ? `/api/image?url=${encodeURIComponent(carImages[key])}`
-  : null;
+  const imageUrl = propImageUrl || carImages[key] || null;
   const color = brandColors[brand] || "#CC0000";
 
   // Fallback SVG par catégorie
