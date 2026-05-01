@@ -107,8 +107,8 @@ interface CarImageProps {
 export default function CarImage({ brand, model, category = "Berline", className = "" }: CarImageProps) {
   const [imgError, setImgError] = useState(false);
   const key = `${brand} ${model}`;
-  const imageUrl = carImages[key] 
-  ? carImages[key].replace('upload.wikimedia.org/wikipedia/commons/thumb/', 'upload.wikimedia.org/wikipedia/commons/thumb/').replace('/400px-', '/320px-')
+ const imageUrl = carImages[key] 
+  ? `/api/image?url=${encodeURIComponent(carImages[key])}`
   : null;
   const color = brandColors[brand] || "#CC0000";
 
